@@ -39,8 +39,14 @@ test:
 about:
   home: https://github.com/NVIDIA/nvtx
   summary: PyNVTX - Python code annotation library
+  description: |
+    NVTX is a cross-platform API for annotating source code to provide
+    contextual information to developer tools. The nvtx package provides 
+    a Python interface to the NVTX C API.
   license: Apache-2.0 WITH LLVM-exception
   license_file: LICENSE.txt
+  dev_url: https://github.com/NVIDIA/NVTX
+  doc_url: https://nvidia.github.io/NVTX/python/
 
 extra:
   recipe-maintainers:
