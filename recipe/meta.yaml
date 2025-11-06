@@ -20,7 +20,7 @@ requirements:
     - {{ stdlib('c') }}
     
   host:
-    - cython >=3.0.11
+    - cython >=3.1
     - nvtx-c 3.3.0
     - pip
     - python
@@ -29,13 +29,19 @@ requirements:
     - python
 
 test:
+  source_files:
+    - tests
   imports:
     - nvtx
     - nvtx._lib
   commands:
     - pip check
+    - pytest tests/test_basic.py
+    - pytest tests/test_nvtx_annotate_pushes_and_pops.py
   requires:
     - pip
+    - pytest
+    - cython
 
 about:
   home: https://github.com/NVIDIA/NVTX
