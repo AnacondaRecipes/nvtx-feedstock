@@ -48,8 +48,8 @@ about:
   license: Apache-2.0 WITH LLVM-exception
   license_family: Apache
   license_file: LICENSE.txt
-  dev_url: https://github.com/NVIDIA/NVTX/tree/release-v3/python
-  doc_url: https://github.com/NVIDIA/NVTX/blob/release-v3/python/README.md
+  dev_url: https://github.com/NVIDIA/NVTX
+  doc_url: https://nvidia.github.io/NVTX/python
 
 extra:
   recipe-maintainers:
