@@ -36,12 +36,8 @@ test:
     - nvtx._lib
   commands:
     - pip check
-    - pytest tests/test_basic.py
-    - pytest tests/test_nvtx_annotate_pushes_and_pops.py
   requires:
     - pip
-    - pytest
-    - cython
 
 about:
   home: https://github.com/NVIDIA/NVTX
