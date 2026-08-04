@@ -18,10 +18,10 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ stdlib('c') }}
-    
+
   host:
     - cython >=3.1
-    - nvtx-c 3.3.0
+    - nvtx-c
     - pip
     - python
     - setuptools
@@ -47,7 +47,7 @@ about:
   home: https://github.com/NVIDIA/NVTX
   summary: nvtx - Python code annotation library
   description: |
-    Python wrapper for NVTX, a cross-platform API for annotating source code 
+    Python wrapper for NVTX, a cross-platform API for annotating source code
     to provide contextual information to developer tools.
   license: Apache-2.0 WITH LLVM-exception
   license_family: Apache
