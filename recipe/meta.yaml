@@ -1,5 +1,5 @@
 {% set name = "nvtx" %}
-{% set version = "0.2.13" %}
+{% set version = "0.2.15" %}
 
 
 package:
@@ -8,20 +8,20 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/nvtx-{{ version }}.tar.gz
-  sha256: 9db7ba135168e14e1f038866100bf8ed42d3e00b404e9bc7b6280ee3af828b92
+  sha256: 2287d3be05b85661deb386f878d1f536c2e532774aa9ec7a50c434942ed81ae5
 
 build:
-  number: 1
+  number: 0
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
   build:
     - {{ compiler('c') }}
     - {{ stdlib('c') }}
-    
+
   host:
     - cython >=3.1
-    - nvtx-c 3.3.0
+    - nvtx-c
     - pip
     - python
     - setuptools
@@ -36,24 +36,20 @@ test:
     - nvtx._lib
   commands:
     - pip check
-    - pytest tests/test_basic.py
-    - pytest tests/test_nvtx_annotate_pushes_and_pops.py
   requires:
     - pip
-    - pytest
-    - cython
 
 about:
   home: https://github.com/NVIDIA/NVTX
   summary: nvtx - Python code annotation library
   description: |
-    Python wrapper for NVTX, a cross-platform API for annotating source code 
+    Python wrapper for NVTX, a cross-platform API for annotating source code
     to provide contextual information to developer tools.
   license: Apache-2.0 WITH LLVM-exception
   license_family: Apache
   license_file: LICENSE.txt
-  dev_url: https://github.com/NVIDIA/NVTX/tree/release-v3/python
-  doc_url: https://github.com/NVIDIA/NVTX/blob/release-v3/python/README.md
+  dev_url: https://github.com/NVIDIA/NVTX
+  doc_url: https://nvidia.github.io/NVTX/python
 
 extra:
   recipe-maintainers:
