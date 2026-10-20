@@ -9,6 +9,10 @@ package:
 source:
   - url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/nvtx-{{ version }}.tar.gz
     sha256: 252fdb870308be4a2beecb3ed174b1d59099eeb63c883f269944a765ce5f7720
+  - url: https://raw.githubusercontent.com/NVIDIA/NVTX/v3.6.0/python/tests/conftest.py
+    sha256: ccda1eb360269acd7a4c4b6e7a47c1f574b22c3993b502d2d7058182d0cca8cb
+    fn: conftest.py
+    folder: tests
 
 build:
   number: 0
@@ -30,13 +34,17 @@ requirements:
 test:
   source_files:
     - tests
+    - pyproject.toml
   imports:
     - nvtx
     - nvtx._lib
   commands:
     - pip check
+    - pytest -v -s tests/
   requires:
     - pip
+    - pytest
+    - numpy
 
 about:
   home: https://github.com/NVIDIA/NVTX
