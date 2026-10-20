@@ -45,6 +45,7 @@ test:
     - pip
     - pytest
     - numpy
+    - setuptools
 
 about:
   home: https://github.com/NVIDIA/NVTX
