@@ -14,10 +14,19 @@ source:
     sha256: ccda1eb360269acd7a4c4b6e7a47c1f574b22c3993b502d2d7058182d0cca8cb
     fn: conftest.py
     folder: tests
+  # include the pyproject.toml from the nvtx-c repository so the version can be matched against the version
+  # we are building. This will ensure that the nvtx_c_version gets updated along with version.
+  - url: https://raw.githubusercontent.com/NVIDIA/NVTX/v{{ nvtx_c_version }}/python/pyproject.toml
+    sha256: e3dc42e0cc4a670dee9c01adcd46425009ff75020b5a85fa908971ae14a7ef83
+    fn: nvtx-c-pyproject.toml
+    folder: .
 
 build:
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  script:
+    # compare the downloaded pyproject.toml version to the expected version.
+    - {{ PYTHON }} -c "import tomllib; assert tomllib.load(open ('nvtx-c-pyproject.toml', 'rb'))['project']['version'] == '{{ version }}'"
+    - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
   build:
@@ -25,10 +34,11 @@ requirements:
     - {{ stdlib('c') }}
   host:
     - cython >=3.1
-    - nvtx-c {{ nvtx_c_version }}
     - pip
     - python
     - setuptools
+    # Note: the nvtx-c package is a (mostly) header only package, and the headers are already included
+    # in the PyPI upstream that we download, so we don't need to include it as a separate dependency here.
   run:
     - python
 
