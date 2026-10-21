@@ -15,7 +15,7 @@ source:
     fn: conftest.py
     folder: tests
   # include the pyproject.toml from the nvtx-c repository so the version can be matched against the version
-  # we are building. This will ensure that the nvtx_c_version gets updated along with version.
+  # we are building. This will fail the build if nvtx_c_version does not get updated with version.
   - url: https://raw.githubusercontent.com/NVIDIA/NVTX/v{{ nvtx_c_version }}/python/pyproject.toml
     sha256: e3dc42e0cc4a670dee9c01adcd46425009ff75020b5a85fa908971ae14a7ef83
     fn: nvtx-c-pyproject.toml
@@ -24,7 +24,7 @@ source:
 build:
   number: 0
   script:
-    # compare the downloaded pyproject.toml version to the expected version.
+    # compare the downloaded pyproject.toml version to the expected version. Fails the build on mismatch
     # the selector is because Python 3.10 does not ship with tomllib
     - {{ PYTHON }} -c "import tomllib; assert tomllib.load(open ('nvtx-c-pyproject.toml', 'rb'))['project']['version'] == '{{ version }}'" # [py>310]
     - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
