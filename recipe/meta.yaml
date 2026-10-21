@@ -25,7 +25,8 @@ build:
   number: 0
   script:
     # compare the downloaded pyproject.toml version to the expected version.
-    - {{ PYTHON }} -c "import tomllib; assert tomllib.load(open ('nvtx-c-pyproject.toml', 'rb'))['project']['version'] == '{{ version }}'"
+    # the selector is because Python 3.10 does not ship with tomllib
+    - {{ PYTHON }} -c "import tomllib; assert tomllib.load(open ('nvtx-c-pyproject.toml', 'rb'))['project']['version'] == '{{ version }}'" # [py>310]
     - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
