@@ -1,5 +1,6 @@
 {% set name = "nvtx" %}
-{% set version = "0.2.15" %}
+{% set version = "0.2.16" %}
+{% set nvtx_c_version = "3.6.0" %}
 
 
 package:
@@ -7,37 +8,57 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/nvtx-{{ version }}.tar.gz
-  sha256: 2287d3be05b85661deb386f878d1f536c2e532774aa9ec7a50c434942ed81ae5
+  - url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/nvtx-{{ version }}.tar.gz
+    sha256: 252fdb870308be4a2beecb3ed174b1d59099eeb63c883f269944a765ce5f7720
+  - url: https://raw.githubusercontent.com/NVIDIA/NVTX/v{{ nvtx_c_version }}/python/tests/conftest.py
+    sha256: ccda1eb360269acd7a4c4b6e7a47c1f574b22c3993b502d2d7058182d0cca8cb
+    fn: conftest.py
+    folder: tests
+  # include the pyproject.toml from the nvtx-c repository so the version can be matched against the version
+  # we are building. This will fail the build if nvtx_c_version does not get updated with version.
+  - url: https://raw.githubusercontent.com/NVIDIA/NVTX/v{{ nvtx_c_version }}/python/pyproject.toml
+    sha256: e3dc42e0cc4a670dee9c01adcd46425009ff75020b5a85fa908971ae14a7ef83
+    fn: nvtx-c-pyproject.toml
+    folder: .
 
 build:
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  script:
+    # compare the downloaded pyproject.toml version to the expected version. Fails the build on mismatch
+    # the selector is because Python 3.10 does not ship with tomllib
+    - {{ PYTHON }} -c "import tomllib; assert tomllib.load(open ('nvtx-c-pyproject.toml', 'rb'))['project']['version'] == '{{ version }}'" # [py>310]
+    - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
   build:
     - {{ compiler('c') }}
     - {{ stdlib('c') }}
-
   host:
     - cython >=3.1
-    - nvtx-c
     - pip
     - python
     - setuptools
+    # Note: the nvtx-c package is a (mostly) header only package, and the headers are already included
+    # in the PyPI upstream that we download, so we don't need to include it as a separate dependency here.
   run:
     - python
 
 test:
   source_files:
     - tests
+    # pyproject.toml contains some pytest configuration
+    - pyproject.toml
   imports:
     - nvtx
     - nvtx._lib
   commands:
     - pip check
+    - pytest -v -s tests/
   requires:
     - pip
+    - pytest
+    - numpy
+    - setuptools
 
 about:
   home: https://github.com/NVIDIA/NVTX
